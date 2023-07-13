@@ -6,7 +6,7 @@
   <!-- /Logo -->
 
   <div class="form-container">
-    <div class="login-header">Register to Trello</div>
+    <div class="login-header">Login to Trello</div>
 
     <!-- Error message -->
     <div class="errors" *ngIf="errorMessage">{{ errorMessage }}</div>
@@ -14,14 +14,13 @@
     <!-- Register form -->
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <input formControlName="email" type="email" placeholder="Email" class="login-input">
-      <input formControlName="username" placeholder="Username" class="login-input">
       <input formControlName="password" type="password" placeholder="Password" class="login-input">
-      <button class="login-submit-button">Register</button>
+      <button class="login-submit-button">Sign in</button>
     </form>
     <!-- /Register form -->
 
     <div class="bottom-form-links">
-      <a routerLink="/login" class="register-link">Sign in</a>
+      <a routerLink="/register" class="register-link">singn up for an account</a>
     </div>
   </div>
 </div>

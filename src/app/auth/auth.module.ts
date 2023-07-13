@@ -9,12 +9,17 @@ import { environment } from "src/environments/environment";
 import { RouterModule } from "@angular/router";
 import { ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
+import { LoginComponent } from "./components/login/login.component";
 
 // Create routes
 const routes = [
   {
     path: 'register',
     component: RegisterComponent,
+  },
+  {
+    path: 'login',
+    component: LoginComponent,
   }
 ]
 
@@ -29,6 +34,7 @@ const routes = [
   ],
   declarations: [
     RegisterComponent, 
+    LoginComponent,
   ]
 })
 export class AuthModule {

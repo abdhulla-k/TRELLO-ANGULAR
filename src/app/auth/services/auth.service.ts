@@ -5,6 +5,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { environment } from "src/environments/environment";
 import { CurrentUserInterface } from "../types/current-user.interface";
 import { RegisterRequestInterface } from "../types/register-request.interface";
+import { LoginRequestInterface } from "../types/login-request.interfacat";
 
 @Injectable()
 export class AuthService {
@@ -28,6 +29,16 @@ export class AuthService {
     return this.http.post<CurrentUserInterface>(
       url,
       registerRequest
+    )
+  }
+
+  // Function to login
+  login(loginRequest: LoginRequestInterface): Observable<CurrentUserInterface> {
+    // Call api and return the observable of registration api
+    const url = `${this.api}/users/login`
+    return this.http.post<CurrentUserInterface>(
+      url,
+      loginRequest
     )
   }
 

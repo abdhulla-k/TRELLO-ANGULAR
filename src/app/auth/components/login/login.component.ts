@@ -1,45 +1,43 @@
- import { Component } from "@angular/core";
+import { Component } from "@angular/core";
 import { FormBuilder, Validators } from "@angular/forms";
 import { HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 
 import { AuthService } from "../../services/auth.service";
-import { RegisterRequestInterface } from "../../types/register-request.interface";
 import { CurrentUserInterface } from "../../types/current-user.interface";
+import { LoginRequestInterface } from "../../types/login-request.interfacat";
 
 @Component({
-  selector: 'auth-register',
-  templateUrl: './register.component.html'
+  selector: 'auth-login',
+  templateUrl: './login.component.html'
 })
-export class RegisterComponent {
+export class LoginComponent {
   // Set a variable to save error message if any
   errorMessage: String | null = null;
 
-  // Create registration form group
+  // Create login form group
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email],],
-    username: ['', Validators.required],
     password: ['', Validators.required],
   });
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router,
+    private router: Router
   ) { }
 
   // Function to submit registration form
   onSubmit() {
     // Get all data from form
-    const { email, username, password } = this.form.value;
-    const request: RegisterRequestInterface = {
+    const { email, password } = this.form.value;
+    const request: LoginRequestInterface = {
       email: String(email),
-      username: String(username),
       password: String(password)
     };
 
     // Send request
-    this.authService.register(request).subscribe({
+    this.authService.login(request).subscribe({
       next: (currentUser: CurrentUserInterface) => {
         // Pass the data to serToken function to save it in local storage
         this.authService.setToken(currentUser);
@@ -54,8 +52,8 @@ export class RegisterComponent {
         this.router.navigateByUrl('/');
       },
       error: (err: HttpErrorResponse) => {
-        // Join all error messages and assign to variable
-        this.errorMessage = err.error.join(', ')
+        console.log(err);
+        this.errorMessage = err.error.emailOrPassword;
       }
     })
   }

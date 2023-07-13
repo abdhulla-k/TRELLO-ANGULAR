@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 
 import { environment } from "src/environments/environment";
 import { CurrentUserInterface } from "../types/current-user.interface";
+import { RegisterRequestInterface } from "../types/register-request.interface";
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,23 @@ export class AuthService {
     return this.http.get<CurrentUserInterface>(`${this.api}/user`);
   }
 
-  // Function to save user details to local
+  // Function to register user
+  register(registerRequest: RegisterRequestInterface): Observable<CurrentUserInterface> {
+    // Call api and return the observable of registration api
+    const url = `${this.api}/users`
+    return this.http.post<CurrentUserInterface>(
+      url,
+      registerRequest
+    )
+  }
+
+  // Function to set token in local storage
+  setToken(currentUser: CurrentUserInterface): void {
+    // Set token in local storage
+    localStorage.setItem('token', currentUser.token.toString());
+  }
+
+  // Function to send around the application
   setCurrentUser(currentUser: CurrentUserInterface | null): void {
     this.currentUser$.next(currentUser);
   }

@@ -4,14 +4,35 @@ import { HttpClient } from "@angular/common/http";
 
 import { CurrentUserInterface } from "./types/current-user.interface";
 import { AuthService } from "./services/auth.service";
+import { RegisterComponent } from "./components/register/register.component";
+import { environment } from "src/environments/environment";
+import { RouterModule } from "@angular/router";
+import { ReactiveFormsModule } from "@angular/forms";
+import { CommonModule } from "@angular/common";
+
+// Create routes
+const routes = [
+  {
+    path: 'register',
+    component: RegisterComponent,
+  }
+]
 
 @NgModule({
+  imports: [
+    RouterModule.forChild(routes),
+    ReactiveFormsModule,
+    CommonModule,
+  ],
   providers: [
     AuthService,
+  ],
+  declarations: [
+    RegisterComponent, 
   ]
 })
 export class AuthModule {
-  url = 'http://localhost:4000'
+  url = environment.url;
 
   constructor(private http: HttpClient) { }
 

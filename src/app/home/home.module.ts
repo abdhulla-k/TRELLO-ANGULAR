@@ -4,6 +4,7 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { HomeComponent } from "./components/home/home.component";
 
+// Create routes for home module
 const routes: Routes = [
   {
     path: '',
@@ -17,7 +18,7 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes),
+    RouterModule.forChild(routes), // pass routes to Router module
   ],
   providers: [],
 })

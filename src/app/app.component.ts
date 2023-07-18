@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AuthService } from './auth/services/auth.service';
+import { CurrentUserInterface } from './auth/types/current-user.interface';
 
 @Component({
   selector: 'app-root',
@@ -15,9 +16,9 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     // Call get current user function to get user details at initial time of application;
     this.authService.getCurrentUser().subscribe({
-      next: (res) => {
+      next: (currentUser: CurrentUserInterface) => {
         // Handle success response
-        console.log('res', res);
+        this.authService.setCurrentUser(currentUser);
       },
       error: (err) => {
         // Streem null to every components if failed getting api

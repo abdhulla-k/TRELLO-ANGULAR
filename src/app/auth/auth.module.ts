@@ -10,6 +10,7 @@ import { RouterModule } from "@angular/router";
 import { ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
 import { LoginComponent } from "./components/login/login.component";
+import { AuthGuardService } from "./services/auth-guard.service";
 
 // Create routes
 const routes = [
@@ -31,6 +32,7 @@ const routes = [
   ],
   providers: [
     AuthService,
+    AuthGuardService
   ],
   declarations: [
     RegisterComponent, 

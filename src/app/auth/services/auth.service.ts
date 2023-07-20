@@ -57,4 +57,13 @@ export class AuthService {
   setCurrentUser(currentUser: CurrentUserInterface | null): void {
     this.currentUser$.next(currentUser);
   }
+
+  // Logout Function
+  logOut():void {
+    // Remove token from locastorage
+    localStorage.removeItem('token');
+
+    // Notify every components user loged out.
+    this.currentUser$.next(null);
+  }
 }

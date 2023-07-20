@@ -3,6 +3,7 @@ import { RouterModule, Routes } from "@angular/router";
 
 import { BoardsComponent } from "./components/boards/boards.component";
 import { AuthGuardService } from "../auth/services/auth-guard.service";
+import { BoardsService } from "../shared/services/boards.service";
 
 const router: Routes = [
   {
@@ -19,7 +20,9 @@ const router: Routes = [
   declarations: [
     BoardsComponent,
   ],
-  providers: [],
+  providers: [
+    BoardsService,
+  ],
 })
 export class BoardsModule {
 

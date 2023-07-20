@@ -13,12 +13,27 @@ export class BoardsComponent implements OnInit {
   constructor(private boardsService: BoardsService) { }
 
   ngOnInit(): void {
+    // Get all Boars from backend
     this.boardsService.getBoards().subscribe({
       next: (res) => {
         // Assign boads array to global 'boards' varialbe
         this.boards = res;
       },
       error: (err) => {
+        console.log(err);
+      }
+    })
+  }
+
+  // Function to create new board
+  createBoard(title: string) {
+    this.boardsService.createBoard(title).subscribe({
+      next: (createdBoard: BoardsInterface) => {
+        // Push new board to existing boards list
+        this.boards = [...this.boards, createdBoard]
+      },
+      error: (err) => {
+        // Handle error
         console.log(err);
       }
     })

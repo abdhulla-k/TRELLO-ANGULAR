@@ -26,7 +26,11 @@ APP TOP BAR
       </div>
 
       <div class="board-tile-list">
-        INLINE FORM
+        <inline-form
+          class="create-board-form"
+          defaultText="Create new board"
+          (handleSubmit)="createBoard($event)"
+        ></inline-form>
         <a
         [routerLink]="['/boards', board._id]"
         *ngFor="let board of boards"

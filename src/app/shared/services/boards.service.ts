@@ -12,4 +12,12 @@ export class BoardsService {
   getBoards(): Observable<BoardsInterface[]> {
     return this.http.get<BoardsInterface[]>(`${environment.url}/boards`)
   }
+
+  // Function to create a board
+  createBoard(title: string): Observable<BoardsInterface> {
+    return this.http.post<BoardsInterface>(
+      `${environment.url}/boards`,
+      { title }
+    )
+  }
 }

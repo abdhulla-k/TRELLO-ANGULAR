@@ -17,6 +17,6 @@ import { InlilineFormComponent } from "./components/inline-form/inline-form.comp
   ],
   providers: [],
 })
-export class InlineModule {
+export class InlineFormModule {
 
 }

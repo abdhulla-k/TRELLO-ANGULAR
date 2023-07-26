@@ -8,6 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './auth/services/authinterceptor.service';
 import { BoardsModule } from './boards/boards.module';
+import { BoardModule } from './board/board.module';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { BoardsModule } from './boards/boards.module';
     HttpClientModule,
     HomeModule,
     BoardsModule,
+    BoardModule,
   ],
   providers: [
     // Provide Auth interceptor in global level

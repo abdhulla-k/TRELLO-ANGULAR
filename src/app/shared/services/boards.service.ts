@@ -13,6 +13,12 @@ export class BoardsService {
     return this.http.get<BoardsInterface[]>(`${environment.url}/boards`)
   }
 
+  // Function to get board details by id
+  geBoard(boardId: string): Observable<BoardsInterface> {
+    const url = `${environment.url}/boards/${boardId}`;
+    return this.http.get<BoardsInterface>(url);
+  }
+
   // Function to create a board
   createBoard(title: string): Observable<BoardsInterface> {
     return this.http.post<BoardsInterface>(

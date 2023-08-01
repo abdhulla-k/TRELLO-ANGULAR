@@ -3,18 +3,21 @@ import { ActivatedRoute } from "@angular/router";
 
 import { BoardsService } from "src/app/shared/services/boards.service";
 import { BoardsInterface } from "src/app/shared/types/board.interface";
+import { BoardService } from "../../services/board.service";
+import { Observable, filter } from "rxjs";
 
 @Component({
   selector: 'app-board',
   templateUrl: './board.component.html',
 })
 export class BoardComponent implements OnInit {
-  boardDetails!: BoardsInterface;
   boardId: string;
+  board$: Observable<BoardsInterface>;
 
   constructor(
     private boardsService: BoardsService,
     private activatedRoute: ActivatedRoute,
+    private boardService: BoardService,
   ) {
     // Get board id from url
     const boardId = this.activatedRoute.snapshot.paramMap.get('boardId');
@@ -24,6 +27,9 @@ export class BoardComponent implements OnInit {
 
     // Assign board id
     this.boardId = boardId;
+
+    // Set initial value in board
+    this.board$ = this.boardService.board$.pipe(filter(Boolean));
   }
 
   ngOnInit(): void {
@@ -35,8 +41,9 @@ export class BoardComponent implements OnInit {
   fetchData(): void {
     // call get board function to get board details from backend
     this.boardsService.geBoard(this.boardId).subscribe({
-      next: (res) => {
-        this.boardDetails = res;
+      next: (board) => {
+        // Set the board details to board service. (to behavioral subject)
+        this.boardService.setBoard(board);
       }
     })
   }

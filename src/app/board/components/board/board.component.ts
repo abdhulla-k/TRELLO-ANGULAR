@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, NavigationStart, Router } from "@angular/router";
 
 import { BoardsService } from "src/app/shared/services/boards.service";
 import { BoardService } from "../../services/board.service";
@@ -21,6 +21,7 @@ export class BoardComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private boardService: BoardService,
     private socketService: SocketService,
+    private router: Router,
   ) {
     // Get board id from url
     const boardId = this.activatedRoute.snapshot.paramMap.get('boardId');
@@ -46,6 +47,22 @@ export class BoardComponent implements OnInit {
 
     // Get board details
     this.fetchData();
+
+    // call initializer function for listening to route changes to leave board
+    this.initializeListeners();
+  }
+
+  // Functon to lisen is navigating out from this route to leave board
+  initializeListeners(): void {
+    this.router.events.subscribe({
+      next: (event) => {
+        // If navigation out from current route. (that means leaving the board)
+        if (event instanceof NavigationStart) {
+          // set board as null in behavior subject in board service
+          this.boardService.leaveBoard(this.boardId);
+        }
+      }
+    })
   }
 
   // Function to get board details by id

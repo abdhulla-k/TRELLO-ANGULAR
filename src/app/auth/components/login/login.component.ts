@@ -6,6 +6,7 @@ import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 import { CurrentUserInterface } from "../../types/current-user.interface";
 import { LoginRequestInterface } from "../../types/login-request.interfacat";
+import { SocketService } from "src/app/shared/services/socket.service";
 
 @Component({
   selector: 'auth-login',
@@ -24,7 +25,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private socketService: SocketService,
   ) { }
 
   // Function to submit registration form
@@ -41,6 +43,9 @@ export class LoginComponent {
       next: (currentUser: CurrentUserInterface) => {
         // Pass the data to serToken function to save it in local storage
         this.authService.setToken(currentUser);
+
+        // Establish socket connection
+        this.socketService.setUpsocketConnection(currentUser);
 
         // Share the data throughout the application
         this.authService.setCurrentUser(currentUser);

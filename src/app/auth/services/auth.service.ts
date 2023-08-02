@@ -6,6 +6,7 @@ import { environment } from "src/environments/environment";
 import { CurrentUserInterface } from "../types/current-user.interface";
 import { RegisterRequestInterface } from "../types/register-request.interface";
 import { LoginRequestInterface } from "../types/login-request.interfacat";
+import { SocketService } from "src/app/shared/services/socket.service";
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,10 @@ export class AuthService {
     map(Boolean),
   )
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private socketService: SocketService,
+  ) { }
 
   // Function to get user details from server
   getCurrentUser(): Observable<CurrentUserInterface> {
@@ -59,11 +63,14 @@ export class AuthService {
   }
 
   // Logout Function
-  logOut():void {
+  logOut(): void {
     // Remove token from locastorage
     localStorage.removeItem('token');
 
     // Notify every components user loged out.
     this.currentUser$.next(null);
+
+    // Disconnect socket connection
+    this.socketService.disconnect();
   }
 }

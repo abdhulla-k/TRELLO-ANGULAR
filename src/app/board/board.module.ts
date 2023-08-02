@@ -5,6 +5,7 @@ import { RouterModule, Routes } from "@angular/router";
 import { BoardComponent } from "./components/board/board.component";
 import { AuthGuardService } from "../auth/services/auth-guard.service";
 import { BoardService } from "./services/board.service";
+import { SocketService } from "../shared/services/socket.service";
 
 const routes: Routes = [
   {
@@ -25,6 +26,7 @@ const routes: Routes = [
   exports: [],
   providers: [
     BoardService,
+    SocketService,
   ],
 })
 export class BoardModule {

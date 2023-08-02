@@ -2,9 +2,11 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 
 import { BoardsService } from "src/app/shared/services/boards.service";
-import { BoardsInterface } from "src/app/shared/types/board.interface";
 import { BoardService } from "../../services/board.service";
+import { SocketService } from "src/app/shared/services/socket.service";
 import { Observable, filter } from "rxjs";
+import { BoardsInterface } from "src/app/shared/types/board.interface";
+import { SocketEventsEnum } from "src/app/shared/types/socket-events.enum";
 
 @Component({
   selector: 'app-board',
@@ -18,12 +20,13 @@ export class BoardComponent implements OnInit {
     private boardsService: BoardsService,
     private activatedRoute: ActivatedRoute,
     private boardService: BoardService,
+    private socketService: SocketService,
   ) {
     // Get board id from url
     const boardId = this.activatedRoute.snapshot.paramMap.get('boardId');
 
     // Throw an error if id not recieved
-    if(!boardId) throw new Error("Can't get boardID from url");
+    if (!boardId) throw new Error("Can't get boardID from url");
 
     // Assign board id
     this.boardId = boardId;
@@ -33,6 +36,14 @@ export class BoardComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // Emit a connection event in socket.io
+    this.socketService.emit(
+      SocketEventsEnum.boardsJoin,
+      {
+        boardId: this.boardId,
+      }
+    )
+
     // Get board details
     this.fetchData();
   }

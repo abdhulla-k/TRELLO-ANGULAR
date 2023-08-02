@@ -20,11 +20,22 @@ export class SocketService {
   // Function to disconnect socket
   disconnect() {
     // Make sure a connection exists
-    if(!this.socket) {
+    if (!this.socket) {
       throw new Error('Socket connection  is not established');
     }
 
     // Dis connect from socket
     this.socket.disconnect();
+  }
+
+  // Function to emit socket events
+  emit(eventName: string, message: any): void {
+    // Make sure connection exists
+    if (!this.socket) {
+      throw new Error('Socket connection not established');
+    }
+
+    // Emit event
+    this.socket.emit(eventName, message);
   }
 }

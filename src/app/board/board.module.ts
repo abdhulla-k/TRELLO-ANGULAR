@@ -6,6 +6,8 @@ import { BoardComponent } from "./components/board/board.component";
 import { AuthGuardService } from "../auth/services/auth-guard.service";
 import { BoardService } from "./services/board.service";
 import { SocketService } from "../shared/services/socket.service";
+import { ColumnsService } from "../shared/services/columns.service";
+import { TopbarModule } from "../shared/modules/topbar/topbar.module";
 
 const routes: Routes = [
   {
@@ -22,11 +24,13 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    TopbarModule,
   ],
   exports: [],
   providers: [
     BoardService,
     SocketService,
+    ColumnsService,
   ],
 })
 export class BoardModule {

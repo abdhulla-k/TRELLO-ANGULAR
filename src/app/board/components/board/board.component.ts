@@ -4,9 +4,11 @@ import { ActivatedRoute, NavigationStart, Router } from "@angular/router";
 import { BoardsService } from "src/app/shared/services/boards.service";
 import { BoardService } from "../../services/board.service";
 import { SocketService } from "src/app/shared/services/socket.service";
-import { Observable, filter } from "rxjs";
+import { Observable, combineLatest, filter, map } from "rxjs";
 import { BoardsInterface } from "src/app/shared/types/board.interface";
 import { SocketEventsEnum } from "src/app/shared/types/socket-events.enum";
+import { ColumnsService } from "src/app/shared/services/columns.service";
+import { ColumnInterface } from "src/app/shared/types/column.interface";
 
 @Component({
   selector: 'app-board',
@@ -14,7 +16,10 @@ import { SocketEventsEnum } from "src/app/shared/types/socket-events.enum";
 })
 export class BoardComponent implements OnInit {
   boardId: string;
-  board$: Observable<BoardsInterface>;
+  data$: Observable<{
+    board: BoardsInterface,
+    columns: ColumnInterface[],
+  }>;
 
   constructor(
     private boardsService: BoardsService,
@@ -22,6 +27,7 @@ export class BoardComponent implements OnInit {
     private boardService: BoardService,
     private socketService: SocketService,
     private router: Router,
+    private columnsService: ColumnsService,
   ) {
     // Get board id from url
     const boardId = this.activatedRoute.snapshot.paramMap.get('boardId');
@@ -32,8 +38,16 @@ export class BoardComponent implements OnInit {
     // Assign board id
     this.boardId = boardId;
 
-    // Set initial value in board
-    this.board$ = this.boardService.board$.pipe(filter(Boolean));
+    // Set a streem to handle multple observables data
+    this.data$ = combineLatest([
+      this.boardService.board$.pipe(filter(Boolean)),
+      this.boardService.columns$,
+    ]).pipe(
+      map(([board, columns]) => ({
+        board,
+        columns,
+      }))
+    )
   }
 
   ngOnInit(): void {
@@ -72,6 +86,13 @@ export class BoardComponent implements OnInit {
       next: (board) => {
         // Set the board details to board service. (to behavioral subject)
         this.boardService.setBoard(board);
+      }
+    })
+
+    // Fetch collumns
+    this.columnsService.getColumns(this.boardId).subscribe({
+      next: (columns: ColumnInterface[]) => {
+        this.boardService.setColumns(columns);
       }
     })
   }

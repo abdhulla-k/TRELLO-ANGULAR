@@ -1,15 +1,17 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, NavigationStart, Router } from "@angular/router";
+import { Observable, combineLatest, filter, map } from "rxjs";
 
 import { BoardsService } from "src/app/shared/services/boards.service";
 import { BoardService } from "../../services/board.service";
 import { SocketService } from "src/app/shared/services/socket.service";
-import { Observable, combineLatest, filter, map } from "rxjs";
 import { BoardsInterface } from "src/app/shared/types/board.interface";
 import { SocketEventsEnum } from "src/app/shared/types/socket-events.enum";
 import { ColumnsService } from "src/app/shared/services/columns.service";
 import { ColumnInterface } from "src/app/shared/types/column.interface";
 import { ColumnInputInterface } from "src/app/shared/types/column-input.interface";
+import { TasksService } from "src/app/shared/services/tasks.service";
+import { TaskInterface } from "src/app/shared/types/task.interface";
 
 @Component({
   selector: 'app-board',
@@ -20,6 +22,7 @@ export class BoardComponent implements OnInit {
   data$: Observable<{
     board: BoardsInterface,
     columns: ColumnInterface[],
+    tasks: TaskInterface[],
   }>;
 
   constructor(
@@ -29,6 +32,7 @@ export class BoardComponent implements OnInit {
     private socketService: SocketService,
     private router: Router,
     private columnsService: ColumnsService,
+    private tasksService: TasksService
   ) {
     // Get board id from url
     const boardId = this.activatedRoute.snapshot.paramMap.get('boardId');
@@ -43,10 +47,12 @@ export class BoardComponent implements OnInit {
     this.data$ = combineLatest([
       this.boardService.board$.pipe(filter(Boolean)),
       this.boardService.columns$,
+      this.boardService.tasks$,
     ]).pipe(
-      map(([board, columns]) => ({
+      map(([board, columns, tasks]) => ({
         board,
         columns,
+        tasks,
       }))
     )
   }
@@ -100,6 +106,13 @@ export class BoardComponent implements OnInit {
     this.columnsService.getColumns(this.boardId).subscribe({
       next: (columns: ColumnInterface[]) => {
         this.boardService.setColumns(columns);
+      }
+    })
+
+    // Fetch tasks
+    this.tasksService.getTasks(this.boardId).subscribe({
+      next: (tasks: TaskInterface[]) => {
+        this.boardService.setTasks(tasks);
       }
     })
   }

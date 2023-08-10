@@ -5,6 +5,7 @@ import { SocketService } from "src/app/shared/services/socket.service";
 import { BoardsInterface } from "src/app/shared/types/board.interface";
 import { ColumnInterface } from "src/app/shared/types/column.interface";
 import { SocketEventsEnum } from "src/app/shared/types/socket-events.enum";
+import { TaskInterface } from "src/app/shared/types/task.interface";
 
 @Injectable()
 export class BoardService {
@@ -13,6 +14,9 @@ export class BoardService {
 
   // Create a behavior subject to share columns
   columns$ = new BehaviorSubject<ColumnInterface[]>([]);
+
+  // Create a behavior subject to share tasks
+  tasks$ = new BehaviorSubject<TaskInterface[]>([]);
 
   constructor(private socketService: SocketService) { }
 
@@ -24,6 +28,11 @@ export class BoardService {
   // Functon to set columns
   setColumns(columns: ColumnInterface[]): void {
     this.columns$.next(columns);
+  }
+
+  // Function to set tasks in streem
+  setTasks(tasks: TaskInterface[]): void {
+    this.tasks$.next(tasks);
   }
 
   // Function to leave group.

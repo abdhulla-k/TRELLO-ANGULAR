@@ -40,4 +40,13 @@ export class BoardService {
       }
     )
   }
+
+  // Function to add newlly created column's details to existing array
+  addColumn(column: ColumnInterface): void {
+    // Get existing columns array from streem
+    const updateColumns = [...this.columns$.getValue(), column];
+
+    // Update the columns with create array
+    this.columns$.next(updateColumns);
+  }
 }

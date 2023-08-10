@@ -78,6 +78,12 @@ export class BoardComponent implements OnInit {
         }
       }
     })
+
+    // Call listener function to listen column creation event
+    this.socketService.listen<ColumnInterface>(SocketEventsEnum.columnsCreateSuccess)
+    .subscribe((column) => {
+      this.boardService.addColumn(column);
+    })
   }
 
   // Function to get board details by id

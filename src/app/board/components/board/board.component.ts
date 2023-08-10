@@ -87,9 +87,9 @@ export class BoardComponent implements OnInit {
 
     // Call listener function to listen column creation event
     this.socketService.listen<ColumnInterface>(SocketEventsEnum.columnsCreateSuccess)
-    .subscribe((column) => {
-      this.boardService.addColumn(column);
-    })
+      .subscribe((column) => {
+        this.boardService.addColumn(column);
+      })
   }
 
   // Function to get board details by id
@@ -127,5 +127,11 @@ export class BoardComponent implements OnInit {
 
     // Send the data through socket io
     this.columnsService.createColumn(columnInput);
+  }
+
+  // Function to filter task by board id
+  getTasksByColumn(boardId: string, tasks: TaskInterface[]): TaskInterface[] {
+    // Returned filtered update
+    return tasks.filter((task) => boardId === task.boardId)
   }
 }

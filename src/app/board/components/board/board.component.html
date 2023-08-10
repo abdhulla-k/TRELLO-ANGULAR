@@ -8,6 +8,12 @@
       *ngFor="let column of data.columns"
       >
       <div class="column-title">{{ column.title }}</div>
+      <div
+        class="task"
+        *ngFor="let task of getTasksByColumn(column.id, data.tasks)"
+        >
+        {{ task.title }}
+      </div>
     </div>
     <inline-form
       class="create-column-form"

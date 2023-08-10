@@ -9,6 +9,7 @@ import { BoardsInterface } from "src/app/shared/types/board.interface";
 import { SocketEventsEnum } from "src/app/shared/types/socket-events.enum";
 import { ColumnsService } from "src/app/shared/services/columns.service";
 import { ColumnInterface } from "src/app/shared/types/column.interface";
+import { ColumnInputInterface } from "src/app/shared/types/column-input.interface";
 
 @Component({
   selector: 'app-board',
@@ -95,5 +96,17 @@ export class BoardComponent implements OnInit {
         this.boardService.setColumns(columns);
       }
     })
+  }
+
+  // Function to create column
+  createColumn(title: string): void {
+    // Get column data to create column
+    const columnInput: ColumnInputInterface = {
+      title,
+      boardId: this.boardId,
+    }
+
+    // Send the data through socket io
+    this.columnsService.createColumn(columnInput);
   }
 }

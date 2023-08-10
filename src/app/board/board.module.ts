@@ -8,6 +8,7 @@ import { BoardService } from "./services/board.service";
 import { SocketService } from "../shared/services/socket.service";
 import { ColumnsService } from "../shared/services/columns.service";
 import { TopbarModule } from "../shared/modules/topbar/topbar.module";
+import { InlineFormModule } from "../shared/modules/inline-form/inline-form.module";
 
 const routes: Routes = [
   {
@@ -25,6 +26,7 @@ const routes: Routes = [
     CommonModule,
     RouterModule.forChild(routes),
     TopbarModule,
+    InlineFormModule,
   ],
   exports: [],
   providers: [

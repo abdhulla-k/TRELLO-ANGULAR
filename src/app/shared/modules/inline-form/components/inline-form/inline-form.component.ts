@@ -27,7 +27,7 @@ export class InlilineFormComponent {
   // Function to activated editing mode
   activateEditing() {
     // Set title value. patch form's title field
-    this.form.patchValue({ title: this.title })
+    // this.form.patchValue({ title: this.title })
 
     // Set component to editing mode
     this.isEditing = true;

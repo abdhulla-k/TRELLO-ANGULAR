@@ -12,6 +12,7 @@ import { ColumnInterface } from "src/app/shared/types/column.interface";
 import { ColumnInputInterface } from "src/app/shared/types/column-input.interface";
 import { TasksService } from "src/app/shared/services/tasks.service";
 import { TaskInterface } from "src/app/shared/types/task.interface";
+import { TaskInputInterface } from "src/app/shared/types/task-input.interface";
 
 @Component({
   selector: 'app-board',
@@ -90,6 +91,14 @@ export class BoardComponent implements OnInit {
       .subscribe((column) => {
         this.boardService.addColumn(column);
       })
+
+    // Call listener function to listen task creation event
+    this.socketService.listen<TaskInterface>(SocketEventsEnum.tasksCreateSuccess)
+      .subscribe({
+        next: (task) => {
+          this.boardService.addTask(task);
+        }
+      })
   }
 
   // Function to get board details by id
@@ -129,9 +138,22 @@ export class BoardComponent implements OnInit {
     this.columnsService.createColumn(columnInput);
   }
 
+  // Function to create Task
+  createTask(title: string, columnId: string): void {
+    // Set a variable with all required data
+    const taskInput: TaskInputInterface  = {
+      title,
+      columnId,
+      boardId: this.boardId,
+    }
+
+    // Send the data to create function in service
+    this.tasksService.createTask(taskInput);
+  }
+
   // Function to filter task by board id
-  getTasksByColumn(boardId: string, tasks: TaskInterface[]): TaskInterface[] {
+  getTasksByColumn(columnId: string, tasks: TaskInterface[]): TaskInterface[] {
     // Returned filtered update
-    return tasks.filter((task) => boardId === task.boardId)
+    return tasks.filter((task) => columnId === task.columnId)
   }
 }

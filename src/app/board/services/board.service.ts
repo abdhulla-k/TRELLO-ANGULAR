@@ -58,4 +58,13 @@ export class BoardService {
     // Update the columns with create array
     this.columns$.next(updateColumns);
   }
+
+  // Function to add newlly created task's details to existing array
+  addTask(task: TaskInterface): void {
+    // Get existing tasks array from streem
+    const updatedTasks = [...this.tasks$.getValue(), task];
+
+    // Update the task with create array
+    this.tasks$.next(updatedTasks);
+  }
 }

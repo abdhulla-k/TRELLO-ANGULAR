@@ -10,10 +10,19 @@
       <div class="column-title">{{ column.title }}</div>
       <div
         class="task"
-        *ngFor="let task of getTasksByColumn(column.id, data.tasks)"
+        *ngFor="let task of getTasksByColumn(column._id, data.tasks)"
         >
         {{ task.title }}
       </div>
+      <inline-form
+        class="create-task-form"
+        defaultText="Add a card"
+        [hasButton]="true"
+        buttonText="Add card"
+        inputPlaceholder="Enter a title for this card"
+        (handleSubmit)="createTask($event, column._id)"
+      >
+      </inline-form>
     </div>
     <inline-form
       class="create-column-form"

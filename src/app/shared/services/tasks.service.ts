@@ -4,11 +4,15 @@ import { environment } from "src/environments/environment";
 
 import { TaskInterface } from "../types/task.interface";
 import { Observable } from "rxjs";
+import { TaskInputInterface } from "../types/task-input.interface";
+import { SocketService } from "./socket.service";
+import { SocketEventsEnum } from "../types/socket-events.enum";
 
 @Injectable()
 export class TasksService {
   constructor(
-    private http: HttpClient
+    private http: HttpClient,
+    private socketSercie: SocketService
   ) { }
 
   // Function to get tasks
@@ -18,5 +22,13 @@ export class TasksService {
 
     // Send request and return Observable
     return this.http.get<TaskInterface[]>(url);
+  }
+
+  // Function to create task
+  createTask(taskInput: TaskInputInterface): void {
+    this.socketSercie.emit(
+      SocketEventsEnum.tasksCreate,
+      taskInput,
+    )
   }
 }

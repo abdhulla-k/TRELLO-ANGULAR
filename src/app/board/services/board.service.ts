@@ -78,4 +78,15 @@ export class BoardService {
     // Send new data to subscribers
     this.board$.next({ ...board, title: updatedBoard.title });
   }
+
+  // Function to remove deleted comums from existing array
+  deleteColumn(columnId: string): void {
+    // Filter existing comumns
+    const updatedColumn = this.columns$
+      .getValue()
+      .filter((column) => column._id !== columnId);
+    
+    // Update filtered columns
+    this.columns$.next(updatedColumn);
+  }
 }

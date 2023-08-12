@@ -32,4 +32,15 @@ export class ColumnsService {
       columnInput
     )
   }
+
+  // Function to delete column
+  deleteColumn(columnId: string, boardId: string): void {
+    this.socketService.emit(
+      SocketEventsEnum.columnsDelete,
+      {
+        columnId,
+        boardId
+      },
+    )
+  }
 }

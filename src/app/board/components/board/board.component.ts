@@ -99,7 +99,7 @@ export class BoardComponent implements OnInit {
           this.boardService.addTask(task);
         }
       })
-    
+
     // Call listener function to listen update board event
     this.socketService.listen<BoardsInterface>(SocketEventsEnum.boardsUpdateSuccess)
       .subscribe({
@@ -107,12 +107,20 @@ export class BoardComponent implements OnInit {
           this.boardService.updateBoard(updatedBoard);
         }
       })
-    
+
     // Listen for delte board event
     this.socketService.listen<void>(SocketEventsEnum.boardsDeleteSuccess)
       .subscribe({
         next: () => {
           this.router.navigateByUrl('/boards');
+        }
+      })
+
+    // Listen for delete column
+    this.socketService.listen<string>(SocketEventsEnum.columnsDeleteSuccess)
+      .subscribe({
+        next: (columnId: string) => {
+          this.boardService.deleteColumn(columnId);
         }
       })
   }
@@ -183,8 +191,18 @@ export class BoardComponent implements OnInit {
 
   // Function to delte board
   deleteBoard(): void {
-    if(confirm('Are you sure you want to delete the board?')) {
+    if (confirm('Are you sure you want to delete the board?')) {
       this.boardsService.deleteBoard(this.boardId);
+    }
+  }
+
+  // Function to delete column
+  deleteColumn(columnId: string) {
+    if (confirm('Are you sure you want to delete the column?')) {
+      this.columnsService.deleteColumn(
+        columnId,
+        this.boardId,
+      );
     }
   }
 }

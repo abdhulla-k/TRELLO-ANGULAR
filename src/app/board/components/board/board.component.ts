@@ -1,6 +1,6 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, NavigationStart, Router } from "@angular/router";
-import { Observable, combineLatest, filter, map } from "rxjs";
+import { Observable, Subject, combineLatest, filter, map, takeUntil } from "rxjs";
 
 import { BoardsService } from "src/app/shared/services/boards.service";
 import { BoardService } from "../../services/board.service";
@@ -18,13 +18,15 @@ import { TaskInputInterface } from "src/app/shared/types/task-input.interface";
   selector: 'app-board',
   templateUrl: './board.component.html',
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements OnInit, OnDestroy {
   boardId: string;
   data$: Observable<{
     board: BoardsInterface,
     columns: ColumnInterface[],
     tasks: TaskInterface[],
   }>;
+
+  unsubscritbe$ = new Subject<void>()
 
   constructor(
     private boardsService: BoardsService,
@@ -88,12 +90,14 @@ export class BoardComponent implements OnInit {
 
     // Call listener function to listen column creation event
     this.socketService.listen<ColumnInterface>(SocketEventsEnum.columnsCreateSuccess)
+      .pipe(takeUntil(this.unsubscritbe$))
       .subscribe((column) => {
         this.boardService.addColumn(column);
       })
 
     // Call listener function to listen task creation event
     this.socketService.listen<TaskInterface>(SocketEventsEnum.tasksCreateSuccess)
+      .pipe(takeUntil(this.unsubscritbe$))
       .subscribe({
         next: (task) => {
           this.boardService.addTask(task);
@@ -102,6 +106,7 @@ export class BoardComponent implements OnInit {
 
     // Call listener function to listen update board event
     this.socketService.listen<BoardsInterface>(SocketEventsEnum.boardsUpdateSuccess)
+      .pipe(takeUntil(this.unsubscritbe$))
       .subscribe({
         next: (updatedBoard) => {
           this.boardService.updateBoard(updatedBoard);
@@ -110,6 +115,7 @@ export class BoardComponent implements OnInit {
 
     // Listen for delte board event
     this.socketService.listen<void>(SocketEventsEnum.boardsDeleteSuccess)
+      .pipe(takeUntil(this.unsubscritbe$))
       .subscribe({
         next: () => {
           this.router.navigateByUrl('/boards');
@@ -118,6 +124,7 @@ export class BoardComponent implements OnInit {
 
     // Listen for delete column
     this.socketService.listen<string>(SocketEventsEnum.columnsDeleteSuccess)
+      .pipe(takeUntil(this.unsubscritbe$))
       .subscribe({
         next: (columnId: string) => {
           this.boardService.deleteColumn(columnId);
@@ -126,6 +133,7 @@ export class BoardComponent implements OnInit {
 
     // Listen for update column event
     this.socketService.listen<ColumnInterface>(SocketEventsEnum.columnsUpdateSuccess)
+      .pipe(takeUntil(this.unsubscritbe$))
       .subscribe({
         next: (updatedColumn) => {
           this.boardService.updateColumn(updatedColumn);
@@ -223,5 +231,10 @@ export class BoardComponent implements OnInit {
         this.boardId,
       );
     }
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscritbe$.next()
+    this.unsubscritbe$.complete();
   }
 }

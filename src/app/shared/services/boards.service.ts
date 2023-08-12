@@ -43,4 +43,14 @@ export class BoardsService {
       }
     )
   }
+
+  // Function to delete board
+  deleteBoard(boardId: string): void {
+    this.socketService.emit(
+      SocketEventsEnum.boardsDelete,
+      {
+        boardId,
+      }
+    )
+  }
 }

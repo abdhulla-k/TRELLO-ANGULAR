@@ -107,6 +107,14 @@ export class BoardComponent implements OnInit {
           this.boardService.updateBoard(updatedBoard);
         }
       })
+    
+    // Listen for delte board event
+    this.socketService.listen<void>(SocketEventsEnum.boardsDeleteSuccess)
+      .subscribe({
+        next: () => {
+          this.router.navigateByUrl('/boards');
+        }
+      })
   }
 
   // Function to get board details by id
@@ -171,5 +179,12 @@ export class BoardComponent implements OnInit {
       this.boardId,
       { title: boardName },
     )
+  }
+
+  // Function to delte board
+  deleteBoard(): void {
+    if(confirm('Are you sure you want to delete the board?')) {
+      this.boardsService.deleteBoard(this.boardId);
+    }
   }
 }

@@ -123,6 +123,14 @@ export class BoardComponent implements OnInit {
           this.boardService.deleteColumn(columnId);
         }
       })
+
+    // Listen for update column event
+    this.socketService.listen<ColumnInterface>(SocketEventsEnum.columnsUpdateSuccess)
+      .subscribe({
+        next: (updatedColumn) => {
+          this.boardService.updateColumn(updatedColumn);
+        }
+      })
   }
 
   // Function to get board details by id
@@ -194,6 +202,17 @@ export class BoardComponent implements OnInit {
     if (confirm('Are you sure you want to delete the board?')) {
       this.boardsService.deleteBoard(this.boardId);
     }
+  }
+
+  // Function to update column
+  updateColumn(columnTitle: string, columnId: string): void {
+    this.columnsService.updateColumn(
+      this.boardId,
+      columnId,
+      {
+        title: columnTitle,
+      }
+    )
   }
 
   // Function to delete column

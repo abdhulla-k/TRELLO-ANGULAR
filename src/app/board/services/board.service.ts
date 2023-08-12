@@ -79,13 +79,29 @@ export class BoardService {
     this.board$.next({ ...board, title: updatedBoard.title });
   }
 
+  // Function to update column
+  updateColumn(updatedColumn: ColumnInterface): void {
+    // Change the title of update column
+    const arrUpdatedColumns = this.columns$.getValue()
+      .map((column) => {
+        // Return updated colum if id match
+        if (column._id === updatedColumn._id) {
+          return { ...column, title: updatedColumn.title }
+        }
+        return column;
+      })
+
+    // Change existing array with updated array
+    this.columns$.next(arrUpdatedColumns);
+  }
+
   // Function to remove deleted comums from existing array
   deleteColumn(columnId: string): void {
     // Filter existing comumns
     const updatedColumn = this.columns$
       .getValue()
       .filter((column) => column._id !== columnId);
-    
+
     // Update filtered columns
     this.columns$.next(updatedColumn);
   }

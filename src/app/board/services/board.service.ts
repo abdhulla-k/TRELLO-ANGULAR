@@ -67,4 +67,15 @@ export class BoardService {
     // Update the task with create array
     this.tasks$.next(updatedTasks);
   }
+
+  // Function to update board details when emitting updation event
+  updateBoard(updatedBoard: BoardsInterface): void {
+    // Make sure already exist a board data
+    const board = this.board$.getValue();
+
+    if (!board) throw new Error('Board is not initialized');
+
+    // Send new data to subscribers
+    this.board$.next({ ...board, title: updatedBoard.title });
+  }
 }

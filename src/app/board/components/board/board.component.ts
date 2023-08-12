@@ -99,6 +99,14 @@ export class BoardComponent implements OnInit {
           this.boardService.addTask(task);
         }
       })
+    
+    // Call listener function to listen update board event
+    this.socketService.listen<BoardsInterface>(SocketEventsEnum.boardsUpdateSuccess)
+      .subscribe({
+        next: (updatedBoard) => {
+          this.boardService.updateBoard(updatedBoard);
+        }
+      })
   }
 
   // Function to get board details by id
@@ -141,7 +149,7 @@ export class BoardComponent implements OnInit {
   // Function to create Task
   createTask(title: string, columnId: string): void {
     // Set a variable with all required data
-    const taskInput: TaskInputInterface  = {
+    const taskInput: TaskInputInterface = {
       title,
       columnId,
       boardId: this.boardId,
@@ -155,5 +163,13 @@ export class BoardComponent implements OnInit {
   getTasksByColumn(columnId: string, tasks: TaskInterface[]): TaskInterface[] {
     // Returned filtered update
     return tasks.filter((task) => columnId === task.columnId)
+  }
+
+  // Function to update board name
+  updateBoardName(boardName: string): void {
+    this.boardsService.updateBoard(
+      this.boardId,
+      { title: boardName },
+    )
   }
 }

@@ -139,6 +139,15 @@ export class BoardComponent implements OnInit, OnDestroy {
           this.boardService.updateColumn(updatedColumn);
         }
       })
+
+    // Listen for update task event
+    this.socketService.listen<TaskInterface>(SocketEventsEnum.tasksUpdateSuccess)
+      .pipe(takeUntil(this.unsubscritbe$))
+      .subscribe({
+        next: (updatedTask) => {
+          this.boardService.updateTasks(updatedTask);
+        }
+      })
   }
 
   // Function to get board details by id

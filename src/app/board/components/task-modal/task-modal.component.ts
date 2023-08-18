@@ -59,7 +59,7 @@ export class TaskModalComponent implements OnDestroy {
       columns,
     })))
 
-    this.task$.pipe(skipUntil(this.unsubscribe$)).subscribe({
+    this.task$.pipe(takeUntil(this.unsubscribe$)).subscribe({
       next: (task) => {
         this.columnForm.patchValue({ columnId: task.columnId })
       }
@@ -96,6 +96,7 @@ export class TaskModalComponent implements OnDestroy {
 
   // Function to update task description
   updateTaskDescription(taskDescription: string): void {
+    console.log(taskDescription);
     this.tasksService.updateTask(
       this.boardId,
       this.taskId,

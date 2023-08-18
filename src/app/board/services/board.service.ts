@@ -105,4 +105,20 @@ export class BoardService {
     // Update filtered columns
     this.columns$.next(updatedColumn);
   }
+
+  // Function to update task
+  updateTasks(updatedTask: TaskInterface): void {
+    // Change the title of update task
+    const arrUpdatedTasks = this.tasks$.getValue()
+      .map((task) => {
+        // Return updated colum if id match
+        if (task._id === updatedTask._id) {
+          return { ...task, ...updatedTask }
+        }
+        return task;
+      })
+
+    // Change existing array with updated array
+    this.tasks$.next(arrUpdatedTasks);
+  }
 }

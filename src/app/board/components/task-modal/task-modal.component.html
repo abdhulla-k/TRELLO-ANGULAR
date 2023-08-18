@@ -19,7 +19,7 @@
   <div class="task-modal-body">
     <div>
       <form [formGroup]="columnForm" lass="column-select-container">
-        <select formControlName="columnId" class="column-select">
+        <select formControlName="columnId" class="margin-task column-select">
           <option
             *ngFor="let column of data.columns"
             [ngValue]="column._id"  

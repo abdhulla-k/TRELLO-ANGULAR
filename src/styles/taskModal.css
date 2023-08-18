@@ -151,3 +151,7 @@
 .task-modal-actions-action:hover {
   background-color: rgba(9, 30, 66, 0.08);
 }
+
+.margin-task {
+  margin: 20px 0px 25px 0px;
+}

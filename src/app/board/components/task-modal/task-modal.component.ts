@@ -1,10 +1,11 @@
 import { Component, HostBinding, OnDestroy } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { BoardService } from "../../services/board.service";
-import { Observable, Subject, combineLatest, filter, map, skipUntil } from "rxjs";
+import { Observable, Subject, combineLatest, filter, map, skipUntil, takeUntil } from "rxjs";
 import { TaskInterface } from "src/app/shared/types/task.interface";
 import { ColumnInterface } from "src/app/shared/types/column.interface";
 import { FormBuilder } from "@angular/forms";
+import { TasksService } from "src/app/shared/services/tasks.service";
 
 @Component({
   selector: 'task-modal',
@@ -32,6 +33,7 @@ export class TaskModalComponent implements OnDestroy {
     private router: Router,
     private boardService: BoardService,
     private fb: FormBuilder,
+    private tasksService: TasksService,
   ) {
     // Access and check is board id and task id exists
     const boardId = this.route.parent?.snapshot.paramMap.get('boardId');
@@ -62,6 +64,18 @@ export class TaskModalComponent implements OnDestroy {
         this.columnForm.patchValue({ columnId: task.columnId })
       }
     })
+
+    combineLatest([
+      this.task$,
+      this.columnForm.get('columnId')!.valueChanges
+    ]).pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (([task, columnId]) => {
+          if (task.columnId !== columnId && columnId) {
+            this.tasksService.updateTask(this.boardId, task._id, { columnId })
+          }
+        })
+      })
   }
 
   // Function to exit from task details
@@ -72,14 +86,24 @@ export class TaskModalComponent implements OnDestroy {
 
   // Functon to update task name
   updateTaskName(taskName: string): void {
-
+    this.tasksService.updateTask(
+      this.boardId,
+      this.taskId,
+      {
+        title: taskName
+      })
   }
 
   // Function to update task description
   updateTaskDescription(taskDescription: string): void {
-
+    this.tasksService.updateTask(
+      this.boardId,
+      this.taskId,
+      {
+        description: taskDescription
+      })
   }
-  
+
   ngOnDestroy(): void {
     this.unsubscribe$.next()
     this.unsubscribe$.complete();

@@ -31,4 +31,23 @@ export class TasksService {
       taskInput,
     )
   }
+
+  // Function to update Task
+  updateTask(
+    boardId: string,
+    taskId: string,
+    fields: {
+      title?: string;
+      description?: string;
+      columnId?: string
+    }): void {
+    this.socketSercie.emit(
+      SocketEventsEnum.tasksUpdate,
+      {
+        boardId,
+        taskId,
+        fields,
+      }
+    )
+  }
 }

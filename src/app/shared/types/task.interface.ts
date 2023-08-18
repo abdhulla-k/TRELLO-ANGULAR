@@ -6,4 +6,5 @@ export interface TaskInterface {
   userId: string;
   columnId: string;
   boardId: string;
+  _id: string;
 };

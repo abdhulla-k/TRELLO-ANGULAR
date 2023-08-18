@@ -81,7 +81,7 @@ export class BoardComponent implements OnInit, OnDestroy {
     this.router.events.subscribe({
       next: (event) => {
         // If navigation out from current route. (that means leaving the board)
-        if (event instanceof NavigationStart) {
+        if (event instanceof NavigationStart && !event.url.includes('/boards')) {
           // set board as null in behavior subject in board service
           this.boardService.leaveBoard(this.boardId);
         }
@@ -231,6 +231,11 @@ export class BoardComponent implements OnInit, OnDestroy {
         this.boardId,
       );
     }
+  }
+
+  // Function to open task details model
+  openTask(taskId: string): void {
+    this.router.navigate(['boards', this.boardId, 'tasks', taskId])
   }
 
   ngOnDestroy(): void {
